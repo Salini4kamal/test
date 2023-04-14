@@ -1,0 +1,110 @@
+import React, { useContext, useState } from 'react'
+import {Card,Button,Row,Col} from 'react-bootstrap';
+import Cart from './Cart';
+import { MyContext } from './Context.jsx';
+import {useNavigate} from "react-router";
+function Pizza({pizza}) {
+    const [varient,setVarient]=useState("small")
+    const[quantity,setQuantity]=useState(1)
+   const {value,setValue}=useState({})
+   const { setUser,user } = useContext(MyContext)
+   const navigate=useNavigate()
+const handleAddToCart=(id,value,piz,)=>{
+  setUser({
+    piz,
+    rate:value
+  })
+  navigate("/cart")
+}
+
+    
+  return (
+   <>
+    <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={pizza.image} />
+      <Card.Body>
+        <Card.Title>{pizza.name}</Card.Title>
+        
+       <Card.Text>
+        <Row>
+            <Col md={6}>
+                <h6>varient</h6>
+                <select value={varient} onChange={(e)=>setVarient(e.target.value)}>
+                    {pizza.varients.map((varient)=>(
+                        <option value ={varient}>{varient}</option>
+                    ))}
+                </select>
+              
+            </Col>
+            <Col md={6}>
+                <h6>Quantity</h6>
+                <select value={quantity} onChange={(e)=>setQuantity(e.target.value)}>
+                
+                {[...Array(10).keys()].map((v, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </option>
+                  ))}
+                </select>  
+            </Col>
+            </Row>
+{/* <div>
+
+            {Pizza.map((product)=>{
+  return <Cart  handleAddToCart={handleAddToCart} data={product} />
+})}
+</div> */}
+       </Card.Text>
+       <Row>
+        <Col  md={6}>price:{pizza.prices[0][varient]*quantity} /-Rs</Col>
+        {/* {setValue(pizza.prices[0][varient]*quantity )} */}
+        
+        <Button  onClick={() => handleAddToCart(pizza.id,pizza.prices[0][varient]*quantity ,pizza)} className='btn btn-warning text-white'>AddToCart</Button>
+       </Row>
+      </Card.Body>
+    </Card>
+   </>
+  )
+  // {pizza.prices[0][varient]*quantity}
+}
+
+export default Pizza
+
+
+import React, { useContext } from 'react'
+import { MyContext } from './Context.jsx';
+ 
+function Cart(props) {
+  const { setUser,user } = useContext(MyContext)
+  return (
+  <>
+    <div>{user}</div>
+   
+    </>
+  )
+}
+
+export default Cart
+
+
+
+
+import React, { createContext, useState, useEffect } from "react";
+
+export const MyContext = createContext("");
+
+const AppContext = ({ children }) => {
+  const [user, setUser] = useState(null);
+ 
+
+  return (
+    <MyContext.Provider
+      value={{user,setUser}}
+    >
+          {children}
+    </MyContext.Provider>
+  );
+};
+
+export default AppContext
+
